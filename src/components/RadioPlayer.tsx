@@ -1,5 +1,5 @@
 
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useRef, useState, useEffect } from 'react';
 import { Volume2, VolumeX, Play, Pause } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { Button } from '@/components/ui/button';
@@ -10,90 +10,89 @@ const RadioPlayer = () => {
   const [isMuted, setIsMuted] = useState(false);
   const [volume, setVolume] = useState(80);
   const [currentTrack, setCurrentTrack] = useState({
-    title: "Loading...",
-    artist: "Please wait"
+    title: "BlueTunes Radio",
+    artist: "Live Stream"
   });
-  const playerContainerRef = useRef<HTMLDivElement>(null);
+  
+  const audioRef = useRef<HTMLAudioElement | null>(null);
   
   useEffect(() => {
-    // Create the script element for the Radio.co player
-    const script = document.createElement('script');
-    script.src = "https://embed.radio.co/player/242436a.js";
-    script.async = true;
+    // Create the audio element
+    const audio = new Audio('https://streamer.radio.co/s0066a9a04/listen');
+    audio.preload = 'metadata';
+    audioRef.current = audio;
     
-    // Append the script to the player container
-    if (playerContainerRef.current) {
-      playerContainerRef.current.appendChild(script);
-    }
+    // Set initial volume
+    audio.volume = volume / 100;
     
-    // Clean up function to remove the script when component unmounts
+    // Clean up on unmount
     return () => {
-      if (playerContainerRef.current) {
-        const scriptElement = playerContainerRef.current.querySelector('script');
-        if (scriptElement) {
-          playerContainerRef.current.removeChild(scriptElement);
-        }
+      if (audioRef.current) {
+        audioRef.current.pause();
+        audioRef.current.src = '';
+        audioRef.current = null;
       }
     };
   }, []);
-
-  // Listen for custom events from Radio.co player
+  
+  // Event listeners for the audio element
   useEffect(() => {
+    const audio = audioRef.current;
+    if (!audio) return;
+    
     const handlePlay = () => {
-      console.log("Radio play event triggered");
+      console.log("Audio play event triggered");
       setIsPlaying(true);
     };
     
     const handlePause = () => {
-      console.log("Radio pause event triggered");
+      console.log("Audio pause event triggered");
       setIsPlaying(false);
     };
     
-    const handleTrackInfo = (e: any) => {
-      console.log("Track info received:", e.detail);
-      if (e.detail) {
-        setCurrentTrack({
-          title: e.detail.title || "Unknown Track",
-          artist: e.detail.artist || "Unknown Artist"
-        });
-      }
+    const handleError = (e: Event) => {
+      console.error("Audio error:", e);
+      setIsPlaying(false);
     };
-
-    window.addEventListener('radio.play', handlePlay);
-    window.addEventListener('radio.pause', handlePause);
-    window.addEventListener('radio.track-info', handleTrackInfo);
-
+    
+    audio.addEventListener('play', handlePlay);
+    audio.addEventListener('pause', handlePause);
+    audio.addEventListener('error', handleError);
+    
     return () => {
-      window.removeEventListener('radio.play', handlePlay);
-      window.removeEventListener('radio.pause', handlePause);
-      window.removeEventListener('radio.track-info', handleTrackInfo);
+      audio.removeEventListener('play', handlePlay);
+      audio.removeEventListener('pause', handlePause);
+      audio.removeEventListener('error', handleError);
     };
   }, []);
 
   const togglePlayPause = () => {
     console.log("Toggle play/pause clicked, current state:", isPlaying);
-    if (window.RadioCoPlayer) {
-      if (isPlaying) {
-        console.log("Pausing radio player");
-        window.RadioCoPlayer.pause();
-      } else {
-        console.log("Playing radio player");
-        window.RadioCoPlayer.play();
-      }
+    const audio = audioRef.current;
+    
+    if (!audio) return;
+    
+    if (isPlaying) {
+      console.log("Pausing audio");
+      audio.pause();
     } else {
-      console.warn("RadioCoPlayer not available yet");
+      console.log("Playing audio");
+      audio.play().catch(err => {
+        console.error("Error playing audio:", err);
+      });
     }
   };
 
   const toggleMute = () => {
-    if (window.RadioCoPlayer) {
-      if (isMuted) {
-        window.RadioCoPlayer.setVolume(volume / 100);
-      } else {
-        window.RadioCoPlayer.setVolume(0);
-      }
-      setIsMuted(!isMuted);
+    const audio = audioRef.current;
+    if (!audio) return;
+    
+    if (isMuted) {
+      audio.volume = volume / 100;
+    } else {
+      audio.volume = 0;
     }
+    setIsMuted(!isMuted);
   };
 
   const handleVolumeChange = (value: number[]) => {
@@ -102,17 +101,14 @@ const RadioPlayer = () => {
     setVolume(newVolume);
     setIsMuted(newVolume === 0);
     
-    if (window.RadioCoPlayer) {
-      window.RadioCoPlayer.setVolume(newVolume / 100);
+    const audio = audioRef.current;
+    if (audio) {
+      audio.volume = newVolume / 100;
     }
   };
 
   return (
     <div className="relative">
-      {/* Hidden player container */}
-      <div ref={playerContainerRef} className="hidden"></div>
-      
-      {/* Custom player UI */}
       <div className="glass p-6 max-w-md mx-auto">
         <div className="mb-4 text-center">
           <h2 className="text-xl font-bold text-blue-900 tracking-tight truncate">
@@ -159,14 +155,3 @@ const RadioPlayer = () => {
 };
 
 export default RadioPlayer;
-
-// TypeScript global window interface extension
-declare global {
-  interface Window {
-    RadioCoPlayer?: {
-      play: () => void;
-      pause: () => void;
-      setVolume: (volume: number) => void;
-    };
-  }
-}
