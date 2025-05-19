@@ -16,30 +16,29 @@ const RadioPlayer = () => {
   
   const audioRef = useRef<HTMLAudioElement | null>(null);
   
-  // Effect to create the audio element and set up autoplay
+  // Effect to create the audio element and set up audio
   useEffect(() => {
-    // Create the audio element
-    const audio = new Audio('https://streamer.radio.co/s0066a9a04/listen');
+    // Create the audio element with autoplay attribute
+    const audio = document.createElement('audio');
+    audio.src = 'https://streamer.radio.co/s0066a9a04/listen';
+    audio.autoplay = true; // Set autoplay attribute
     audio.preload = 'metadata';
     audioRef.current = audio;
     
     // Set initial volume
     audio.volume = volume / 100;
     
-    // Try to autoplay when component mounts
-    const playAudio = async () => {
-      try {
-        await audio.play();
-        console.log("Autoplay successful");
-        setIsPlaying(true);
-      } catch (err) {
-        console.error("Autoplay failed:", err);
-        // Many browsers prevent autoplay without user interaction
-        setIsPlaying(false);
-      }
-    };
-
-    playAudio();
+    // Listen for play events
+    audio.addEventListener('play', () => {
+      console.log("Audio started playing");
+      setIsPlaying(true);
+    });
+    
+    // Listen for errors
+    audio.addEventListener('error', (e) => {
+      console.error("Audio error:", e);
+      setIsPlaying(false);
+    });
     
     // Clean up on unmount
     return () => {
