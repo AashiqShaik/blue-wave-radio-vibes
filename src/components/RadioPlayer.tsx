@@ -40,8 +40,19 @@ const RadioPlayer = () => {
       setIsPlaying(false);
     });
     
+    // Force play on page load after a short delay
+    const playAudioOnLoad = setTimeout(() => {
+      if (audio) {
+        console.log("Attempting to play audio after page load");
+        audio.play().catch(err => {
+          console.error("Error playing audio after page load:", err);
+        });
+      }
+    }, 1000);
+    
     // Clean up on unmount
     return () => {
+      clearTimeout(playAudioOnLoad);
       if (audioRef.current) {
         audioRef.current.pause();
         audioRef.current.src = '';
