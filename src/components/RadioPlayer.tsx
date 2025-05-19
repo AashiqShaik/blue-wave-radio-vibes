@@ -10,7 +10,7 @@ const RadioPlayer = () => {
   const [isMuted, setIsMuted] = useState(false);
   const [volume, setVolume] = useState(80);
   const [currentTrack, setCurrentTrack] = useState({
-    title: "BlueTunes Radio",
+    title: "Instore Media",
     artist: "Live Stream"
   });
   
@@ -24,6 +24,17 @@ const RadioPlayer = () => {
     
     // Set initial volume
     audio.volume = volume / 100;
+    
+    // Autoplay when component mounts
+    audio.play().then(() => {
+      setIsPlaying(true);
+      console.log("Autoplay successful");
+    }).catch(err => {
+      console.error("Autoplay failed:", err);
+      // Many browsers require user interaction before autoplay
+      // Just set the state to not playing if autoplay fails
+      setIsPlaying(false);
+    });
     
     // Clean up on unmount
     return () => {

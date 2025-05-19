@@ -1,6 +1,7 @@
 
 import React from 'react';
 import { cn } from '@/lib/utils';
+import { Radio } from 'lucide-react';
 
 const Header = () => {
   return (
@@ -9,11 +10,11 @@ const Header = () => {
         <div className="w-8 h-8 rounded-full bg-gradient-to-r from-blue-600 to-blue-400 flex items-center justify-center">
           <div className="w-2 h-2 bg-white rounded-full glow"></div>
         </div>
-        <h1 className="text-xl font-bold text-blue-900">BlueTunes Radio</h1>
+        <h1 className="text-xl font-bold text-blue-900">Instore Media</h1>
       </div>
       
-      <nav>
-        <ul className="flex gap-6">
+      <nav className="flex items-center">
+        <ul className="hidden md:flex gap-6 mr-6">
           {["Home", "About", "Schedule", "Contact"].map((item) => (
             <li key={item}>
               <a 
@@ -25,6 +26,16 @@ const Header = () => {
             </li>
           ))}
         </ul>
+        
+        <a 
+          href="https://streamer.radio.co/s0066a9a04/listen" 
+          target="_blank" 
+          rel="noopener noreferrer"
+          className="flex items-center gap-1.5 px-4 py-2 rounded-full bg-blue-600 text-white hover:bg-blue-700 transition-colors"
+        >
+          <Radio size={16} />
+          <span className="font-medium text-sm">HPCL Live</span>
+        </a>
       </nav>
     </header>
   );
