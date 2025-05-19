@@ -1,7 +1,9 @@
 
 import React, { useEffect, useRef, useState } from 'react';
-import { Volume2, VolumeX } from 'lucide-react';
+import { Volume2, VolumeX, Play, Pause } from 'lucide-react';
 import { cn } from '@/lib/utils';
+import { Button } from '@/components/ui/button';
+import { Slider } from '@/components/ui/slider';
 
 const RadioPlayer = () => {
   const [isPlaying, setIsPlaying] = useState(false);
@@ -37,9 +39,18 @@ const RadioPlayer = () => {
 
   // Listen for custom events from Radio.co player
   useEffect(() => {
-    const handlePlay = () => setIsPlaying(true);
-    const handlePause = () => setIsPlaying(false);
+    const handlePlay = () => {
+      console.log("Radio play event triggered");
+      setIsPlaying(true);
+    };
+    
+    const handlePause = () => {
+      console.log("Radio pause event triggered");
+      setIsPlaying(false);
+    };
+    
     const handleTrackInfo = (e: any) => {
+      console.log("Track info received:", e.detail);
       if (e.detail) {
         setCurrentTrack({
           title: e.detail.title || "Unknown Track",
@@ -59,6 +70,21 @@ const RadioPlayer = () => {
     };
   }, []);
 
+  const togglePlayPause = () => {
+    console.log("Toggle play/pause clicked, current state:", isPlaying);
+    if (window.RadioCoPlayer) {
+      if (isPlaying) {
+        console.log("Pausing radio player");
+        window.RadioCoPlayer.pause();
+      } else {
+        console.log("Playing radio player");
+        window.RadioCoPlayer.play();
+      }
+    } else {
+      console.warn("RadioCoPlayer not available yet");
+    }
+  };
+
   const toggleMute = () => {
     if (window.RadioCoPlayer) {
       if (isMuted) {
@@ -70,8 +96,9 @@ const RadioPlayer = () => {
     }
   };
 
-  const handleVolumeChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const newVolume = Number(e.target.value);
+  const handleVolumeChange = (value: number[]) => {
+    const newVolume = value[0];
+    console.log("Volume changed to:", newVolume);
     setVolume(newVolume);
     setIsMuted(newVolume === 0);
     
@@ -94,26 +121,36 @@ const RadioPlayer = () => {
           <p className="text-sm text-blue-700">{currentTrack.artist}</p>
         </div>
         
-        <div className="flex items-center justify-between mt-6">
-          <div className="flex items-center space-x-2">
-            <button
+        <div className="flex flex-col gap-4">
+          <Button 
+            onClick={togglePlayPause}
+            className="blue-gradient mx-auto w-16 h-16 rounded-full flex items-center justify-center"
+            size="icon"
+          >
+            {isPlaying ? <Pause size={24} /> : <Play size={24} />}
+          </Button>
+          
+          <div className="flex items-center space-x-4">
+            <Button
               onClick={toggleMute}
-              className="p-2 rounded-full blue-gradient text-white hover:opacity-90 transition-opacity"
+              variant="ghost"
+              size="icon"
+              className="text-blue-700"
             >
               {isMuted ? <VolumeX size={18} /> : <Volume2 size={18} />}
-            </button>
-            <input
-              type="range"
-              min="0"
-              max="100"
-              value={volume}
-              onChange={handleVolumeChange}
-              className="w-24 h-2 accent-blue-500"
+            </Button>
+            
+            <Slider
+              defaultValue={[volume]}
+              max={100}
+              step={1}
+              onValueChange={handleVolumeChange}
+              className="flex-1"
             />
           </div>
           
-          <div className="text-xs text-blue-700 font-medium">
-            {isPlaying ? 'On Air' : 'Loading...'}
+          <div className="text-xs text-blue-700 font-medium text-center">
+            {isPlaying ? 'On Air' : 'Ready to Play'}
           </div>
         </div>
       </div>
