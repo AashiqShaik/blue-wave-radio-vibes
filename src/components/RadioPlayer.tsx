@@ -10,7 +10,7 @@ const RadioPlayer = () => {
   const [isMuted, setIsMuted] = useState(false);
   const [volume, setVolume] = useState(80);
   const [currentTrack, setCurrentTrack] = useState({
-    title: "Instore Media",
+    title: "HPCL Live",
     artist: "Live Stream"
   });
   
@@ -19,10 +19,9 @@ const RadioPlayer = () => {
   // Effect to create the audio element and set up audio
   useEffect(() => {
     // Create the audio element with autoplay attribute
-    const audio = document.createElement('audio');
-    audio.src = 'https://streamer.radio.co/s0066a9a04/listen';
+    const audio = new Audio('https://streamer.radio.co/s0066a9a04/listen');
     audio.autoplay = true; // Set autoplay attribute
-    audio.preload = 'metadata';
+    audio.preload = 'auto';
     audioRef.current = audio;
     
     // Set initial volume
@@ -40,15 +39,32 @@ const RadioPlayer = () => {
       setIsPlaying(false);
     });
     
-    // Force play on page load after a short delay
-    const playAudioOnLoad = setTimeout(() => {
+    // Force play on page load
+    const attemptAutoplay = () => {
       if (audio) {
-        console.log("Attempting to play audio after page load");
-        audio.play().catch(err => {
-          console.error("Error playing audio after page load:", err);
-        });
+        console.log("Attempting to autoplay audio");
+        const playPromise = audio.play();
+        
+        if (playPromise !== undefined) {
+          playPromise.catch(err => {
+            console.error("Autoplay prevented by browser:", err);
+            // Most browsers require user interaction before playing audio with sound
+            setIsPlaying(false);
+          });
+        }
       }
-    }, 1000);
+    };
+    
+    // Try to autoplay immediately and again after a short delay
+    attemptAutoplay();
+    const playAudioOnLoad = setTimeout(attemptAutoplay, 1000);
+    
+    // Dispatch a custom event that the Equalizer component can listen to
+    if (isPlaying) {
+      window.dispatchEvent(new Event('radio.play'));
+    } else {
+      window.dispatchEvent(new Event('radio.pause'));
+    }
     
     // Clean up on unmount
     return () => {
@@ -60,6 +76,16 @@ const RadioPlayer = () => {
       }
     };
   }, []);
+  
+  // Handle play state changes
+  useEffect(() => {
+    // Dispatch custom events for the Equalizer
+    if (isPlaying) {
+      window.dispatchEvent(new Event('radio.play'));
+    } else {
+      window.dispatchEvent(new Event('radio.pause'));
+    }
+  }, [isPlaying]);
   
   // Event listeners for the audio element
   useEffect(() => {
