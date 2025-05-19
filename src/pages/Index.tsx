@@ -18,7 +18,7 @@ const Index = () => {
         <main className="flex-1 flex flex-col items-center justify-center">
           <div className="max-w-lg w-full">
             <div className="text-center mb-8">
-              <h1 className="text-4xl font-bold text-blue-900 mb-2">Instore Media</h1>
+              <h1 className="text-4xl font-bold text-blue-900 mb-2">HPCL Live</h1>
               <p className="text-blue-700">Streaming the best music 24/7</p>
             </div>
             
