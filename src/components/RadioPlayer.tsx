@@ -1,177 +1,39 @@
 
-import React, { useRef, useState, useEffect } from 'react';
-import { Volume2, VolumeX, Play, Pause } from 'lucide-react';
-import { cn } from '@/lib/utils';
-import { Button } from '@/components/ui/button';
-import { Slider } from '@/components/ui/slider';
+import React, { useState } from 'react';
+import { useAudioPlayer } from '@/hooks/useAudioPlayer';
+import PlayButton from '@/components/PlayButton';
+import VolumeControl from '@/components/VolumeControl';
+import TrackInfo from '@/components/TrackInfo';
 
 const RadioPlayer = () => {
-  const [isPlaying, setIsPlaying] = useState(false);
-  const [isMuted, setIsMuted] = useState(false);
-  const [volume, setVolume] = useState(80);
-  const [currentTrack, setCurrentTrack] = useState({
+  const [currentTrack] = useState({
     title: "HPCL Live",
     artist: "Live Stream"
   });
   
-  const audioRef = useRef<HTMLAudioElement | null>(null);
-  
-  // Effect to create the audio element and set up audio
-  useEffect(() => {
-    // Create the audio element
-    const audio = new Audio();
-    audio.src = 'https://streamer.radio.co/s0066a9a04/listen';
-    audio.crossOrigin = 'anonymous';
-    audio.preload = 'auto';
-    audioRef.current = audio;
-    
-    // Set initial volume
-    audio.volume = volume / 100;
-    
-    // Listen for events
-    const handlePlay = () => {
-      console.log("Audio started playing");
-      setIsPlaying(true);
-    };
-    
-    const handlePause = () => {
-      console.log("Audio paused");
-      setIsPlaying(false);
-    };
-    
-    const handleError = (e: Event) => {
-      console.error("Audio error:", e);
-      setIsPlaying(false);
-    };
-    
-    const handleCanPlay = () => {
-      console.log("Audio can play - attempting to start");
-      audio.play().catch(err => {
-        console.error("Play failed:", err);
-        setIsPlaying(false);
-      });
-    };
-    
-    audio.addEventListener('play', handlePlay);
-    audio.addEventListener('pause', handlePause);
-    audio.addEventListener('error', handleError);
-    audio.addEventListener('canplay', handleCanPlay);
-    
-    // Force load and play
-    audio.load();
-    
-    // Also try immediate play
-    setTimeout(() => {
-      console.log("Attempting immediate play");
-      audio.play().then(() => {
-        console.log("Immediate play successful");
-      }).catch(err => {
-        console.error("Immediate play failed:", err);
-      });
-    }, 100);
-    
-    // Clean up on unmount
-    return () => {
-      audio.removeEventListener('play', handlePlay);
-      audio.removeEventListener('pause', handlePause);
-      audio.removeEventListener('error', handleError);
-      audio.removeEventListener('canplay', handleCanPlay);
-      if (audioRef.current) {
-        audioRef.current.pause();
-        audioRef.current.src = '';
-        audioRef.current = null;
-      }
-    };
-  }, []);
-  
-  // Handle play state changes
-  useEffect(() => {
-    // Dispatch custom events for the Equalizer
-    if (isPlaying) {
-      window.dispatchEvent(new Event('radio.play'));
-    } else {
-      window.dispatchEvent(new Event('radio.pause'));
-    }
-  }, [isPlaying]);
-
-  const togglePlayPause = () => {
-    console.log("Toggle play/pause clicked, current state:", isPlaying);
-    const audio = audioRef.current;
-    
-    if (!audio) return;
-    
-    if (isPlaying) {
-      console.log("Pausing audio");
-      audio.pause();
-    } else {
-      console.log("Playing audio");
-      audio.play().catch(err => {
-        console.error("Error playing audio:", err);
-      });
-    }
-  };
-
-  const toggleMute = () => {
-    const audio = audioRef.current;
-    if (!audio) return;
-    
-    if (isMuted) {
-      audio.volume = volume / 100;
-    } else {
-      audio.volume = 0;
-    }
-    setIsMuted(!isMuted);
-  };
-
-  const handleVolumeChange = (value: number[]) => {
-    const newVolume = value[0];
-    console.log("Volume changed to:", newVolume);
-    setVolume(newVolume);
-    setIsMuted(newVolume === 0);
-    
-    const audio = audioRef.current;
-    if (audio) {
-      audio.volume = newVolume / 100;
-    }
-  };
+  const {
+    isPlaying,
+    isMuted,
+    volume,
+    togglePlayPause,
+    toggleMute,
+    handleVolumeChange
+  } = useAudioPlayer('https://streamer.radio.co/s0066a9a04/listen', 80);
 
   return (
     <div className="relative">
       <div className="glass p-6 max-w-md mx-auto">
-        <div className="mb-4 text-center">
-          <h2 className="text-xl font-bold text-blue-900 tracking-tight truncate">
-            {currentTrack.title}
-          </h2>
-          <p className="text-sm text-blue-700">{currentTrack.artist}</p>
-        </div>
+        <TrackInfo title={currentTrack.title} artist={currentTrack.artist} />
         
         <div className="flex flex-col gap-4">
-          <Button 
-            onClick={togglePlayPause}
-            className="blue-gradient mx-auto w-16 h-16 rounded-full flex items-center justify-center"
-            size="icon"
-          >
-            {isPlaying ? <Pause size={24} /> : <Play size={24} />}
-          </Button>
+          <PlayButton isPlaying={isPlaying} onTogglePlayPause={togglePlayPause} />
           
-          <div className="flex items-center space-x-4">
-            <Button
-              onClick={toggleMute}
-              variant="ghost"
-              size="icon"
-              className="text-blue-700"
-            >
-              {isMuted ? <VolumeX size={18} /> : <Volume2 size={18} />}
-            </Button>
-            
-            <Slider
-              defaultValue={[volume]}
-              max={100}
-              step={1}
-              onValueChange={handleVolumeChange}
-              className="flex-1"
-            />
-          </div>
+          <VolumeControl 
+            volume={volume}
+            isMuted={isMuted}
+            onToggleMute={toggleMute}
+            onVolumeChange={handleVolumeChange}
+          />
           
           <div className="text-xs text-blue-700 font-medium text-center">
             {isPlaying ? 'On Air' : 'Ready to Play'}
