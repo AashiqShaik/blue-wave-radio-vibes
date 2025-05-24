@@ -18,57 +18,64 @@ const RadioPlayer = () => {
   
   // Effect to create the audio element and set up audio
   useEffect(() => {
-    // Create the audio element with autoplay attribute
-    const audio = new Audio('https://streamer.radio.co/s0066a9a04/listen');
-    audio.autoplay = true; // Set autoplay attribute
+    // Create the audio element
+    const audio = new Audio();
+    audio.src = 'https://streamer.radio.co/s0066a9a04/listen';
+    audio.crossOrigin = 'anonymous';
     audio.preload = 'auto';
     audioRef.current = audio;
     
     // Set initial volume
     audio.volume = volume / 100;
     
-    // Listen for play events
-    audio.addEventListener('play', () => {
+    // Listen for events
+    const handlePlay = () => {
       console.log("Audio started playing");
       setIsPlaying(true);
-    });
-    
-    // Listen for errors
-    audio.addEventListener('error', (e) => {
-      console.error("Audio error:", e);
-      setIsPlaying(false);
-    });
-    
-    // Force play on page load
-    const attemptAutoplay = () => {
-      if (audio) {
-        console.log("Attempting to autoplay audio");
-        const playPromise = audio.play();
-        
-        if (playPromise !== undefined) {
-          playPromise.catch(err => {
-            console.error("Autoplay prevented by browser:", err);
-            // Most browsers require user interaction before playing audio with sound
-            setIsPlaying(false);
-          });
-        }
-      }
     };
     
-    // Try to autoplay immediately and again after a short delay
-    attemptAutoplay();
-    const playAudioOnLoad = setTimeout(attemptAutoplay, 1000);
+    const handlePause = () => {
+      console.log("Audio paused");
+      setIsPlaying(false);
+    };
     
-    // Dispatch a custom event that the Equalizer component can listen to
-    if (isPlaying) {
-      window.dispatchEvent(new Event('radio.play'));
-    } else {
-      window.dispatchEvent(new Event('radio.pause'));
-    }
+    const handleError = (e: Event) => {
+      console.error("Audio error:", e);
+      setIsPlaying(false);
+    };
+    
+    const handleCanPlay = () => {
+      console.log("Audio can play - attempting to start");
+      audio.play().catch(err => {
+        console.error("Play failed:", err);
+        setIsPlaying(false);
+      });
+    };
+    
+    audio.addEventListener('play', handlePlay);
+    audio.addEventListener('pause', handlePause);
+    audio.addEventListener('error', handleError);
+    audio.addEventListener('canplay', handleCanPlay);
+    
+    // Force load and play
+    audio.load();
+    
+    // Also try immediate play
+    setTimeout(() => {
+      console.log("Attempting immediate play");
+      audio.play().then(() => {
+        console.log("Immediate play successful");
+      }).catch(err => {
+        console.error("Immediate play failed:", err);
+      });
+    }, 100);
     
     // Clean up on unmount
     return () => {
-      clearTimeout(playAudioOnLoad);
+      audio.removeEventListener('play', handlePlay);
+      audio.removeEventListener('pause', handlePause);
+      audio.removeEventListener('error', handleError);
+      audio.removeEventListener('canplay', handleCanPlay);
       if (audioRef.current) {
         audioRef.current.pause();
         audioRef.current.src = '';
@@ -86,37 +93,6 @@ const RadioPlayer = () => {
       window.dispatchEvent(new Event('radio.pause'));
     }
   }, [isPlaying]);
-  
-  // Event listeners for the audio element
-  useEffect(() => {
-    const audio = audioRef.current;
-    if (!audio) return;
-    
-    const handlePlay = () => {
-      console.log("Audio play event triggered");
-      setIsPlaying(true);
-    };
-    
-    const handlePause = () => {
-      console.log("Audio pause event triggered");
-      setIsPlaying(false);
-    };
-    
-    const handleError = (e: Event) => {
-      console.error("Audio error:", e);
-      setIsPlaying(false);
-    };
-    
-    audio.addEventListener('play', handlePlay);
-    audio.addEventListener('pause', handlePause);
-    audio.addEventListener('error', handleError);
-    
-    return () => {
-      audio.removeEventListener('play', handlePlay);
-      audio.removeEventListener('pause', handlePause);
-      audio.removeEventListener('error', handleError);
-    };
-  }, []);
 
   const togglePlayPause = () => {
     console.log("Toggle play/pause clicked, current state:", isPlaying);
