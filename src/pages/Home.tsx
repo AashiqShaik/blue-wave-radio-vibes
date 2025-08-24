@@ -14,10 +14,7 @@ const Home = () => {
       {/* Header */}
       <header className="w-full py-6 px-6 flex items-center justify-between glass mb-8">
         <div className="flex items-center gap-3">
-          <div className="w-10 h-10 rounded-full bg-gradient-to-r from-primary to-primary/80 flex items-center justify-center">
-            <Radio className="w-5 h-5 text-primary-foreground" />
-          </div>
-          <h1 className="text-2xl font-bold text-foreground">Instore Media</h1>
+          <img src="/lovable-uploads/69d62b58-be8d-46f6-9abd-dab06d71daf2.png" alt="Instore Media" className="w-12 h-12" />
         </div>
         
         <nav className="flex items-center gap-8">
@@ -154,9 +151,7 @@ const Home = () => {
         <div className="container mx-auto">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-3">
-              <div className="w-8 h-8 rounded-full bg-gradient-to-r from-primary to-primary/80 flex items-center justify-center">
-                <Radio className="w-4 h-4 text-primary-foreground" />
-              </div>
+              <img src="/lovable-uploads/69d62b58-be8d-46f6-9abd-dab06d71daf2.png" alt="Instore Media" className="w-8 h-8" />
               <span className="font-semibold text-foreground">Instore Media</span>
             </div>
             <p className="text-sm text-muted-foreground">© 2025 Instore Media. All rights reserved.</p>
