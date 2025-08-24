@@ -14,7 +14,7 @@ const Home = () => {
       {/* Header */}
       <header className="w-full py-6 px-6 flex items-center justify-between glass mb-8">
         <div className="flex items-center gap-3">
-          <img src="/lovable-uploads/6ef6640b-5cb7-46ac-bea6-c70609aaf0f4.png" alt="Instore Media" className="w-24 h-24" />
+          <img src="/lovable-uploads/6ef6640b-5cb7-46ac-bea6-c70609aaf0f4.png" alt="Instore Media" className="h-16 w-auto" />
         </div>
         
         <nav className="flex items-center gap-8">
@@ -35,11 +35,11 @@ const Home = () => {
         <section className="text-center py-20">
           <div className="max-w-4xl mx-auto">
             <h1 className="text-6xl font-bold text-foreground mb-6 leading-tight">
-              Professional Audio Solutions for 
-              <span className="text-primary"> Retail Environments</span>
+              Complete Media Solutions for 
+              <span className="text-primary"> Modern Retail</span>
             </h1>
             <p className="text-xl text-muted-foreground mb-8 leading-relaxed">
-              Transform your customer experience with curated music, live streaming, and professional audio management solutions designed for modern retail spaces.
+              Transform your customer experience with curated audio, dynamic digital displays, and integrated media management solutions designed for modern retail environments.
             </p>
             <div className="flex gap-4 justify-center">
               <Link to="/hpclstream">
@@ -59,10 +59,10 @@ const Home = () => {
         <section id="services" className="py-20">
           <div className="text-center mb-16">
             <h2 className="text-4xl font-bold text-foreground mb-4">Why Choose Instore Media?</h2>
-            <p className="text-xl text-muted-foreground">Professional audio solutions tailored for your business needs</p>
+            <p className="text-xl text-muted-foreground">Comprehensive media solutions tailored for your business needs</p>
           </div>
           
-          <div className="grid md:grid-cols-3 gap-8">
+          <div className="grid md:grid-cols-4 gap-8">
             <Card className="glass border-0">
               <CardHeader className="text-center">
                 <div className="w-16 h-16 rounded-full bg-primary/10 flex items-center justify-center mx-auto mb-4">
@@ -90,6 +90,16 @@ const Home = () => {
                 </div>
                 <CardTitle className="text-xl">Customer Experience</CardTitle>
                 <CardDescription>Enhance shopping experience with mood-appropriate music</CardDescription>
+              </CardHeader>
+            </Card>
+
+            <Card className="glass border-0">
+              <CardHeader className="text-center">
+                <div className="w-16 h-16 rounded-full bg-primary/10 flex items-center justify-center mx-auto mb-4">
+                  <Zap className="w-8 h-8 text-primary" />
+                </div>
+                <CardTitle className="text-xl">Digital Displays</CardTitle>
+                <CardDescription>Dynamic advertising and promotional content management</CardDescription>
               </CardHeader>
             </Card>
           </div>
@@ -151,8 +161,7 @@ const Home = () => {
         <div className="container mx-auto">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-3">
-              <img src="/lovable-uploads/6ef6640b-5cb7-46ac-bea6-c70609aaf0f4.png" alt="Instore Media" className="w-16 h-16" />
-              <span className="font-semibold text-foreground">Instore Media</span>
+              <img src="/lovable-uploads/6ef6640b-5cb7-46ac-bea6-c70609aaf0f4.png" alt="Instore Media" className="h-12 w-auto" />
             </div>
             <p className="text-sm text-muted-foreground">© 2025 Instore Media. All rights reserved.</p>
           </div>
