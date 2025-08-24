@@ -1,10 +1,13 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { Play, Radio, Headphones, Users, Clock, Zap } from 'lucide-react';
+import { Play, Radio, Headphones, Users, Clock, Zap, Monitor } from 'lucide-react';
+import ContactForm from '@/components/ContactForm';
 
 const Home = () => {
+  const [isContactFormOpen, setIsContactFormOpen] = useState(false);
+
   return (
     <div className="min-h-screen flex flex-col">
       {/* Background gradient with subtle pattern */}
@@ -85,7 +88,7 @@ const Home = () => {
                   <Radio className="w-8 h-8 text-primary" />
                 </div>
                 <CardTitle className="text-xl">Live Streaming</CardTitle>
-                <CardDescription>24/7 professional radio streaming with curated playlists</CardDescription>
+                <CardDescription>Centralized music and ad streaming for every store, every location.</CardDescription>
               </CardHeader>
             </Card>
 
@@ -112,10 +115,10 @@ const Home = () => {
             <Card className="glass border-0">
               <CardHeader className="text-center">
                 <div className="w-16 h-16 rounded-full bg-primary/10 flex items-center justify-center mx-auto mb-4">
-                  <Zap className="w-8 h-8 text-primary" />
+                  <Monitor className="w-8 h-8 text-primary" />
                 </div>
-                <CardTitle className="text-xl">Digital Displays</CardTitle>
-                <CardDescription>Dynamic advertising and promotional content management</CardDescription>
+                <CardTitle className="text-xl">Display Advertising</CardTitle>
+                <CardDescription>Display Advertising and promotional content management</CardDescription>
               </CardHeader>
             </Card>
           </div>
@@ -160,7 +163,13 @@ const Home = () => {
               Get started with professional audio solutions that enhance your customer experience.
             </p>
             <div className="flex flex-col sm:flex-row gap-3 md:gap-4 justify-center">
-              <Button size="lg" className="w-full sm:w-auto">Get Started Today</Button>
+              <Button 
+                size="lg" 
+                className="w-full sm:w-auto"
+                onClick={() => setIsContactFormOpen(!isContactFormOpen)}
+              >
+                Get Started Today
+              </Button>
               <Link to="/hpclstream">
                 <Button variant="outline" size="lg" className="gap-2 w-full sm:w-auto">
                   <Play className="w-4 h-4 md:w-5 md:h-5" />
@@ -168,6 +177,10 @@ const Home = () => {
                 </Button>
               </Link>
             </div>
+            <ContactForm 
+              isOpen={isContactFormOpen} 
+              onClose={() => setIsContactFormOpen(false)} 
+            />
           </div>
         </section>
       </div>
