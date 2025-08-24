@@ -20,9 +20,22 @@ const ContactForm = ({ isOpen, onClose }: ContactFormProps) => {
     const email = formData.get('email') as string;
     const message = formData.get('message') as string;
     
-    const whatsappMessage = `Hi! I'm interested in Instore Media solutions.%0A%0AName: ${encodeURIComponent(name)}%0APhone: ${encodeURIComponent(phone)}%0AEmail: ${encodeURIComponent(email)}%0A%0AMessage: ${encodeURIComponent(message)}`;
-    const whatsappUrl = `https://wa.me/919703289716?text=${whatsappMessage}`;
+    // Create WhatsApp message with proper line breaks
+    const whatsappMessage = `Hi! I'm interested in Instore Media solutions.
+
+Name: ${name}
+Phone: ${phone}
+Email: ${email}
+
+Message: ${message || 'No additional message'}`;
     
+    // Properly encode the message for URL
+    const encodedMessage = encodeURIComponent(whatsappMessage);
+    const whatsappUrl = `https://wa.me/919703289716?text=${encodedMessage}`;
+    
+    console.log('WhatsApp URL:', whatsappUrl);
+    
+    // Open WhatsApp in new tab
     window.open(whatsappUrl, '_blank');
     onClose();
   };
