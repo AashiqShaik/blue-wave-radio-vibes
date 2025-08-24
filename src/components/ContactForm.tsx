@@ -20,7 +20,7 @@ const ContactForm = ({ isOpen, onClose }: ContactFormProps) => {
     const email = formData.get('email') as string;
     const message = formData.get('message') as string;
     
-    // Create WhatsApp message with proper line breaks
+    // Create WhatsApp message with proper formatting
     const whatsappMessage = `Hi! I'm interested in Instore Media solutions.
 
 Name: ${name}
@@ -31,7 +31,7 @@ Message: ${message || 'No additional message'}`;
     
     // Properly encode the message for URL
     const encodedMessage = encodeURIComponent(whatsappMessage);
-    const whatsappUrl = `https://wa.me/919703289716?text=${encodedMessage}`;
+    const whatsappUrl = `https://wa.me/+919703289716?text=${encodedMessage}`;
     
     console.log('WhatsApp URL:', whatsappUrl);
     
