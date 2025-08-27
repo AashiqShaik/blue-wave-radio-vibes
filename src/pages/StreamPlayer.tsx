@@ -1,10 +1,24 @@
 
-import React from 'react';
+import React, { useEffect } from 'react';
 import RadioPlayer from '@/components/RadioPlayer';
 import Equalizer from '@/components/Equalizer';
 import Header from '@/components/Header';
 
 const Index = () => {
+  // Direct stream URL for media players
+  const STREAM_URL = 'https://streamer.radio.co/s0066a9a04/listen';
+  
+  useEffect(() => {
+    // Check if this is a direct stream request
+    const urlParams = new URLSearchParams(window.location.search);
+    const isDirect = urlParams.get('direct') === '1';
+    
+    if (isDirect) {
+      // Redirect to the actual stream URL for media players
+      window.location.replace(STREAM_URL);
+      return;
+    }
+  }, []);
   return (
     <div className="min-h-screen flex flex-col">
       {/* Background gradient with subtle pattern */}
