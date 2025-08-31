@@ -2,7 +2,9 @@ import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { Play, Radio, Headphones, Users, Clock, Zap, Monitor } from 'lucide-react';
+import { Play, Radio, Headphones, Users, Clock, Zap, Monitor, Volume2, Tv } from 'lucide-react';
+import audioAdvertisingImage from '@/assets/audio-advertising.jpg';
+import displayAdvertisingImage from '@/assets/display-advertising.jpg';
 import ContactForm from '@/components/ContactForm';
 
 const Home = () => {
@@ -151,6 +153,84 @@ const Home = () => {
                 </div>
                 <p className="text-muted-foreground">Satisfied Clients</p>
               </div>
+            </div>
+          </div>
+        </section>
+
+        {/* Audio Advertising Section */}
+        <section className="py-12 md:py-20">
+          <div className="grid lg:grid-cols-2 gap-8 md:gap-12 items-center">
+            <div className="order-2 lg:order-1">
+              <img 
+                src={audioAdvertisingImage} 
+                alt="Audio Advertising Solutions" 
+                className="w-full h-64 md:h-80 object-cover rounded-xl shadow-lg"
+              />
+            </div>
+            <div className="order-1 lg:order-2 space-y-4 md:space-y-6">
+              <div className="flex items-center gap-3 mb-4">
+                <div className="w-12 h-12 rounded-full bg-primary/10 flex items-center justify-center">
+                  <Volume2 className="w-6 h-6 text-primary" />
+                </div>
+                <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold text-foreground">Audio Advertising</h2>
+              </div>
+              <p className="text-lg text-muted-foreground leading-relaxed">
+                Reach your customers through targeted audio advertisements seamlessly integrated with your retail soundtrack. 
+                Our audio advertising solutions deliver promotional messages at optimal moments without disrupting the shopping experience.
+              </p>
+              <ul className="space-y-3 text-muted-foreground">
+                <li className="flex items-center gap-3">
+                  <div className="w-2 h-2 bg-primary rounded-full"></div>
+                  <span>Scheduled promotional announcements</span>
+                </li>
+                <li className="flex items-center gap-3">
+                  <div className="w-2 h-2 bg-primary rounded-full"></div>
+                  <span>Location-specific messaging</span>
+                </li>
+                <li className="flex items-center gap-3">
+                  <div className="w-2 h-2 bg-primary rounded-full"></div>
+                  <span>Real-time campaign management</span>
+                </li>
+              </ul>
+            </div>
+          </div>
+        </section>
+
+        {/* Display Advertising Section */}
+        <section className="py-12 md:py-20">
+          <div className="grid lg:grid-cols-2 gap-8 md:gap-12 items-center">
+            <div className="space-y-4 md:space-y-6">
+              <div className="flex items-center gap-3 mb-4">
+                <div className="w-12 h-12 rounded-full bg-primary/10 flex items-center justify-center">
+                  <Tv className="w-6 h-6 text-primary" />
+                </div>
+                <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold text-foreground">Display Advertising</h2>
+              </div>
+              <p className="text-lg text-muted-foreground leading-relaxed">
+                Transform your retail space with dynamic digital displays that showcase promotions, product information, 
+                and brand messaging. Our display advertising solutions create engaging visual experiences that drive sales.
+              </p>
+              <ul className="space-y-3 text-muted-foreground">
+                <li className="flex items-center gap-3">
+                  <div className="w-2 h-2 bg-primary rounded-full"></div>
+                  <span>Interactive digital signage</span>
+                </li>
+                <li className="flex items-center gap-3">
+                  <div className="w-2 h-2 bg-primary rounded-full"></div>
+                  <span>Automated content scheduling</span>
+                </li>
+                <li className="flex items-center gap-3">
+                  <div className="w-2 h-2 bg-primary rounded-full"></div>
+                  <span>Multi-location campaign deployment</span>
+                </li>
+              </ul>
+            </div>
+            <div>
+              <img 
+                src={displayAdvertisingImage} 
+                alt="Display Advertising Solutions" 
+                className="w-full h-64 md:h-80 object-cover rounded-xl shadow-lg"
+              />
             </div>
           </div>
         </section>
