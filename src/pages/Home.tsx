@@ -162,9 +162,9 @@ const Home = () => {
           <div className="grid lg:grid-cols-2 gap-8 md:gap-12 items-center">
             <div className="order-2 lg:order-1">
               <img 
-                src={audioAdvertisingImage} 
-                alt="Audio Advertising Solutions" 
-                className="w-full h-64 md:h-80 object-cover rounded-xl shadow-lg"
+                src="/lovable-uploads/f57325ce-c64e-4d89-86b9-a1bb83e5d9d9.png" 
+                alt="Gas station audio advertising solutions" 
+                className="w-full h-64 md:h-80 object-contain rounded-xl bg-gradient-to-br from-blue-50 to-white p-6"
               />
             </div>
             <div className="order-1 lg:order-2 space-y-4 md:space-y-6">
