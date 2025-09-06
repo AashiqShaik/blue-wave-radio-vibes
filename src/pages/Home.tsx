@@ -160,14 +160,7 @@ const Home = () => {
         {/* Audio Advertising Section */}
         <section className="py-12 md:py-20">
           <div className="grid lg:grid-cols-2 gap-8 md:gap-12 items-center">
-            <div className="order-2 lg:order-1">
-              <img 
-                src="/lovable-uploads/f57325ce-c64e-4d89-86b9-a1bb83e5d9d9.png" 
-                alt="Gas station audio advertising solutions" 
-                className="w-full h-64 md:h-80 object-contain rounded-xl bg-gradient-to-br from-blue-50 to-white p-6"
-              />
-            </div>
-            <div className="order-1 lg:order-2 space-y-4 md:space-y-6">
+            <div className="space-y-4 md:space-y-6">
               <div className="flex items-center gap-3 mb-4">
                 <div className="w-12 h-12 rounded-full bg-primary/10 flex items-center justify-center">
                   <Volume2 className="w-6 h-6 text-primary" />
@@ -192,6 +185,13 @@ const Home = () => {
                   <span>Real-time campaign management</span>
                 </li>
               </ul>
+            </div>
+            <div>
+              <img 
+                src="/lovable-uploads/f57325ce-c64e-4d89-86b9-a1bb83e5d9d9.png" 
+                alt="Gas station audio advertising solutions" 
+                className="w-full h-full object-contain"
+              />
             </div>
           </div>
         </section>
