@@ -190,7 +190,7 @@ const Home = () => {
               <img 
                 src="/lovable-uploads/bca1d622-d179-4db3-a17c-292eb02bd612.png" 
                 alt="Gas station audio advertising solutions" 
-                className="w-full h-64 md:h-80 object-contain rounded-xl shadow-lg"
+                className="w-full h-64 md:h-80 object-contain"
               />
             </div>
           </div>
